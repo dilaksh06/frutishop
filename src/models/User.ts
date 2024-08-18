@@ -17,14 +17,15 @@ interface IUser extends Document {
 }
 
 const userSchema = new Schema<IUser>({
-    username: { type: String, required: true, unique: true },
+    username: { type: String, required: true }, // Removed unique: true
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     address: { type: String, required: true },
     phone: { type: String, required: true },
     userType: { type: String, required: true, enum: ['Seller', 'Buyer', 'Admin'] },
-    storeId: { type: Schema.Types.ObjectId, ref: 'Store' }, // Foreign key reference to the Store model
+    storeId: { type: Schema.Types.ObjectId, ref: 'Store' },
 });
+
 
 userSchema.pre<IUser>('save', async function (next) {
     if (!this.isModified('password')) {
