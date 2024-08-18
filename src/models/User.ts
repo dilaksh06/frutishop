@@ -8,10 +8,10 @@ interface IUser extends Document {
     username: string;
     email: string;
     password: string;
-    Address: string;
-    Phone: string;
-    UserType: 'Seller' | 'Buyer' | 'Admin';
-    StoreId: Types.ObjectId; // Reference to the Store model
+    address: string;
+    phone: string;
+    userType: 'Seller' | 'Buyer' | 'Admin';
+    storeId: Types.ObjectId; // Reference to the Store model
     comparePassword(candidatePassword: string): Promise<boolean>;
 
 }
@@ -20,10 +20,10 @@ const userSchema = new Schema<IUser>({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    Address: { type: String, required: true },
-    Phone: { type: String, required: true },
-    UserType: { type: String, required: true, enum: ['Seller', 'Buyer', 'Admin'] },
-    StoreId: { type: Schema.Types.ObjectId, ref: 'Store' }, // Foreign key reference to the Store model
+    address: { type: String, required: true },
+    phone: { type: String, required: true },
+    userType: { type: String, required: true, enum: ['Seller', 'Buyer', 'Admin'] },
+    storeId: { type: Schema.Types.ObjectId, ref: 'Store' }, // Foreign key reference to the Store model
 });
 
 userSchema.pre<IUser>('save', async function (next) {
