@@ -3,12 +3,7 @@ import { addFruit, deleteFruit, updateFruit } from "../controllers/FruitsControl
 const router = Router();
 
 router.post('/addFruit', addFruit);
-router.put('/updateFruit/:ProductID', updateFruit); // Update fruit by ProductID
+router.put('/updateFruit/:ProductID', updateFruit);
 router.delete('/deleteFruit/:ProductID', deleteFruit);
-// Test route to check parameter passing
-router.get('/test/:ProductID', (req, res) => {
-    console.log(req.params.ProductID);
-    res.send('Check console for ProductID');
-});
 
 export default router;
