@@ -3,7 +3,7 @@ import os
 def list_files_and_folders(startpath):
     excluded_dirs = {'node_modules', '.git'}
     
-    with open('folder_structure.txt', 'w') as file:
+    with open('folder_structure.md', 'w') as file:
         for root, dirs, files in os.walk(startpath):
             # Skip excluded directories
             dirs[:] = [d for d in dirs if d not in excluded_dirs]
