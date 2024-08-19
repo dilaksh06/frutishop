@@ -1,13 +1,10 @@
 import { Request, Response } from "express";
 import { Order } from "../models/Order";
-import { Types } from "mongoose";
+
 import { v4 as uuidv4 } from 'uuid';
+import { calculateTotalAmount } from "../Utils/Utils";
 
 
-// Helper function to calculate TotalAmount
-const calculateTotalAmount = (products: { name: string, quantity: number, price: number }[]) => {
-    return products.reduce((total, product) => total + product.quantity * product.price, 0);
-};
 
 // Generate a unique OrderID
 const generateOrderID = () => {

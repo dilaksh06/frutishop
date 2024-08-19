@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import fruitRoutes from './routes/FruitsRoutes'; // Adjust path if necessary
 import UserRoutes from './routes/FruitsRoutes';
 import OrderRoutes from './routes/OrderRoutes';
+import PaymentRoutes from './routes/PaymentRoutes'
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,7 +21,7 @@ app.use(express.json()); // Add this line to parse JSON bodies
 app.use(UserRoutes);
 app.use(fruitRoutes);
 app.use(OrderRoutes);
-
+app.use(PaymentRoutes);
 
 app.get('/', (req, res) => {
     res.send("hello");
