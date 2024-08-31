@@ -7,11 +7,11 @@ const generateToken = (id: Types.ObjectId) => {
     return jwt.sign({ id }, process.env.JWT_SECRET!, { expiresIn: '1h' });
 };
 
+// Register new User with Buyer role
 export const register = async (req: Request, res: Response) => {
-    console.log('Inside register function');
-    console.log('Request body:', req.body);
+    console.log('Create User body:', req.body);
 
-    const { username, email, password, address, phone, userType, storeId } = req.body;
+    const { username, email, password, address, phone, userType = "Buyer" } = req.body;
 
     if (!username || !email || !password || !address || !phone || !userType) {
         return res.status(400).json({ message: 'All fields are required' });
@@ -24,6 +24,12 @@ export const register = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'Email already exists' });
         }
 
+        // Check if username already exists
+        const userNameExists = await User.findOne({ username });
+        if (userNameExists) {
+            return res.status(400).json({ message: 'Username already exists' });
+        }
+
         // Create new user
         const user: IUser = new User({
             username,
@@ -32,7 +38,6 @@ export const register = async (req: Request, res: Response) => {
             address,
             phone,
             userType,
-            storeId: storeId || null
         });
         await user.save();
 
@@ -48,12 +53,9 @@ export const register = async (req: Request, res: Response) => {
     }
 };
 
-
-
 // Login user
 export const login = async (req: Request, res: Response) => {
-    console.log('Inside login function');
-    console.log('Request body:', req.body);
+    console.log('Login body:', req.body);
 
     const { email, password } = req.body;
 
@@ -86,44 +88,50 @@ export const login = async (req: Request, res: Response) => {
     }
 };
 
-
-// Delete user
-export const deleteUser = async (req: Request, res: Response) => {
-    console.log('Inside deleteUser function');
-    console.log('Request body:', req.body);
-
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        return res.status(400).json({ message: 'Email and password are required' });
-    }
-
-    try {
-        // Find user by email
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Check password
-        const isMatch = await user.comparePassword(password);
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid email or password' });
-        }
-
-        // Delete user
-        await User.deleteOne({ email });
-
-        // Send response
-        res.status(200).json({ message: 'User account deleted successfully' });
-    } catch (error) {
-        console.error('Error during user deletion:', error);
-        res.status(500).json({ message: 'An error occurred during account deletion' });
-    }
-};
-
 // Logout user
 export const logout = async (req: Request, res: Response) => {
     res.clearCookie('jwt', { httpOnly: true });
     return res.status(200).json({ message: 'Successfully logged out' });
 };
+
+export const createSeller = async (req: Request, res: Response) => {
+    console.log('Create Seller body:', req.body);
+
+    const { username, email, password, address, phone, userType = "Seller", storeId } = req.body;
+
+    if (!username || !email || !password || !address || !phone || !userType || !storeId) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    try {
+        // Check if email already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email already exists' });
+        }
+
+        // Check if username already exists
+        const userNameExists = await User.findOne({ username });
+        if (userNameExists) {
+            return res.status(400).json({ message: 'Username already exists' });
+        }
+
+        // Create new user
+        const user: IUser = new User({
+            username,
+            email,
+            password,
+            address,
+            phone,
+            userType,
+            storeId,
+        });
+        await user.save();
+
+        // Send response
+        res.status(201).json({ message: 'Seller registered successfully', user: { username, email } });
+    } catch (error) {
+        console.error('Error during seller registration:', error);
+        res.status(400).json({ message: 'An error occurred during registration' });
+    }
+}

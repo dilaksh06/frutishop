@@ -1,25 +1,26 @@
+import { AuthRequest } from './../middleware/authMiddleware';
 import { Request, Response } from "express";
 import Fruit from "../models/Fruits"; // Adjust the path if necessary
 
 // Controller to create a new fruit
 export const addFruit = async (req: Request, res: Response) => {
-    const { ProductName, Description, Price, Quantity, CategoryID, SellerID, ImageURL } = req.body;
-
+    const { productName, description, price, stock } = req.body;
+    // Need to add seller ID
+    const sellerId = (req as AuthRequest).user?._id;
+    console.log(sellerId);
     // Check if all required fields are provided
-    if (!ProductName || !Description || !Price || !Quantity || !CategoryID || !SellerID || !ImageURL) {
+    if (!productName || !description || !price || !stock) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
     try {
         // Create new fruit
         const fruit = new Fruit({
-            ProductName,
-            Description,
-            Price,
-            Quantity,
-            CategoryID,
-            SellerID,
-            ImageURL
+            productName, 
+            description, 
+            price, 
+            stock,
+            sellerId,
         });
 
         // Save the fruit to the database
@@ -33,7 +34,20 @@ export const addFruit = async (req: Request, res: Response) => {
     }
 };
 
+export const getFruitsBySellerId = async (req: Request, res: Response) => {
+    const { sellerId } = req.params;
 
+    try {
+        // Find all fruits by sellerId
+        const fruits = await Fruit.find({ sellerId });
+
+        // Send success response
+        res.status(200).json({ fruits });
+    } catch (error) {
+        console.error('Error fetching fruits:', error);
+        res.status(500).json({ message: 'An error occurred while fetching the fruits' });
+    }
+}
 
 // Controller to update an existing fruit
 export const updateFruit = async (req: Request, res: Response) => {
@@ -65,8 +79,6 @@ export const updateFruit = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'An error occurred while updating the fruit' });
     }
 };
-
-
 
 // Delete a fruit by ProductID
 export const deleteFruit = async (req: Request, res: Response) => {

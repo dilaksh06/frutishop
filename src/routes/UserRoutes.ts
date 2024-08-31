@@ -1,10 +1,11 @@
-import { deleteUser, login, logout, register } from "../controllers/UserController";
+import { login, logout, register, createSeller } from "../controllers/UserController";
 import { Router } from "express";
 
 const router = Router();
 
-router.post('/', register); // Ensure this route is correctly mapped to `register`
+router.post('/', register);
+router.post('/seller', createSeller);
 router.post('/login', login);
-router.delete('/delete', deleteUser);  // Add route for account deletion
-router.post('/logout', logout);  // Add route for logout
+router.post('/logout', logout);
+
 export default router;

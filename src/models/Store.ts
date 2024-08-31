@@ -1,13 +1,13 @@
 import { Schema, model } from 'mongoose';
 
 interface IStore {
-    StoreId: number;
-    StoreName: string;
+    storeId: number;
+    storeName: string;
 }
 
 const storeSchema = new Schema<IStore>({
-    StoreId: { type: Number, required: true, unique: true },
-    StoreName: { type: String, required: true },
+    storeId: { type: Number, required: true, unique: true },
+    storeName: { type: String, required: true },
 });
 
 const Store = model<IStore>('Store', storeSchema);

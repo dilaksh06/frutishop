@@ -3,7 +3,6 @@ import Store from './Store'; // Import the Store model
 import bcrypt from 'bcrypt';
 
 interface IUser extends Document {
-
     _id: Types.ObjectId;
     username: string;
     email: string;
@@ -13,7 +12,6 @@ interface IUser extends Document {
     userType: 'Seller' | 'Buyer' | 'Admin';
     storeId: Types.ObjectId; // Reference to the Store model
     comparePassword(candidatePassword: string): Promise<boolean>;
-
 }
 
 const userSchema = new Schema<IUser>({
