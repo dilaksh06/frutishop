@@ -4,8 +4,6 @@ import { Order } from "../models/Order";
 import { v4 as uuidv4 } from 'uuid';
 import { calculateTotalAmount } from "../Utils/Utils";
 
-
-
 // Generate a unique OrderID
 const generateOrderID = () => {
     return uuidv4(); // Generates a unique ID
