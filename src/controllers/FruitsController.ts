@@ -34,6 +34,37 @@ export const addFruit = async (req: Request, res: Response) => {
     }
 };
 
+export const getAllFruits = async (req: Request, res: Response) => {
+    try {
+        // Find all fruits
+        const fruits = await Fruit.find();
+        // Send success response
+        res.status(200).json({ fruits });
+    } catch (error) {
+        console.error('Error fetching fruits:', error);
+        res.status(500).json({ message: 'An error occurred while fetching the fruits' });
+    }
+}
+
+export const getFruitById = async (req: Request, res: Response) => {
+    const { id } = req.params; 
+
+    try {
+        const fruit = await Fruit.findById({ _id: id });
+
+        // If the fruit is not found
+        if (!fruit) {
+            return res.status(404).json({ message: 'Fruit not found' });
+        }
+
+        // Send success response
+        res.status(200).json({ fruit });
+    } catch (error) {
+        console.error('Error fetching fruit:', error);
+        res.status(500).json({ message: 'An error occurred while fetching the fruit' });
+    }
+}
+
 export const getFruitsBySellerId = async (req: Request, res: Response) => {
     const { sellerId } = req.params;
 

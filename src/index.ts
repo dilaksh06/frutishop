@@ -8,6 +8,7 @@ import OrderRoutes from './routes/OrderRoutes';
 import PaymentRoutes from './routes/PaymentRoutes'
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import authRoutes from './routes/AuthRoutes';
 
 dotenv.config();
 
@@ -31,7 +32,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cookieParser());
 
-
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users',UserRoutes);
 app.use('/api/v1/store', StoreRoutes);
 app.use('/api/v1/fruits', fruitRoutes);
