@@ -3,6 +3,6 @@ import { createPayment } from '../controllers/PaymentController'; // Adjust the 
 
 const router = Router();
 
-router.post('/createPayment', createPayment);
+router.post('/create-payment-intent', createPayment);
 
 export default router;

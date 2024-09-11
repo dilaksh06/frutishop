@@ -1,37 +1,23 @@
 import { Request, Response } from 'express';
 import Payment from '../models/Payment';
 import { Order } from '../models/Order';
+import Stripe from 'stripe';
+
+const stripe = new Stripe('sk_test_51PrHd9Rxa5Loq6IRHlY17Wt8b5HUfssOiRWU2w79eGHFx6I7iiu5HvPqNYnna6cawXiwQGWQLZ3ZhI7F4mE9Rb5z00LWY9Ikco');
 
 export const createPayment = async (req: Request, res: Response) => {
+    const { amount } = req.body;
+  
     try {
-        const { PaymentID, Amount, OrderID } = req.body;
-
-        // Check if all required fields are provided
-        if (!PaymentID || !Amount || !OrderID) {
-            return res.status(400).json({ message: 'PaymentID, Amount, and OrderID are required' });
-        }
-
-        // Create a new payment
-        const payment = new Payment({
-            PaymentID,
-            Amount,
-            OrderID,
-            PaymentDate: new Date()
-        });
-
-        // Save the payment
-        await payment.save();
-
-        // Delete the order after payment is created
-        const deletedOrder = await Order.findOneAndDelete({ OrderID });
-
-        if (!deletedOrder) {
-            return res.status(404).json({ message: 'Order not found' });
-        }
-
-        res.status(201).json({ message: 'Payment created successfully, and order deleted', payment });
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount * 100,
+        currency: 'usd',
+      });
+  
+      res.json({
+        clientSecret: paymentIntent.client_secret, // Send this to the frontend
+      });
     } catch (error) {
-        console.error('Error creating payment:', error);
-        res.status(500).json({ message: 'An error occurred while creating the payment' });
+      res.status(500).json({ message: "Payment failed" });
     }
 };

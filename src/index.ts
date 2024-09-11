@@ -36,9 +36,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users',UserRoutes);
 app.use('/api/v1/store', StoreRoutes);
 app.use('/api/v1/fruits', fruitRoutes);
-
-app.use(OrderRoutes);
-app.use(PaymentRoutes);
+app.use('/api/v1/payment', PaymentRoutes);
 
 app.get('/', (req, res) => {
     res.send("hello");
